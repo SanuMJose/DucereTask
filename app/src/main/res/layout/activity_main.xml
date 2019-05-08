@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/fragment_container"/>
     <Button
+        android:textColor="@color/white"
+        android:id="@+id/btn_solvefarm"
         android:layout_margin="40dp"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

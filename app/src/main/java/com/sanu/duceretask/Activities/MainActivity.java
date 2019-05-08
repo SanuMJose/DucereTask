@@ -14,7 +14,7 @@ import com.sanu.duceretask.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button generate_puzzle;
+    Button generate_puzzle,solve_puzzle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +24,24 @@ public class MainActivity extends AppCompatActivity {
         generate_puzzle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                generate_puzzle.setBackgroundResource(R.color.grey);
+                solve_puzzle.setBackgroundResource(R.color.red);
+
                 PuzzleFragment frag = new PuzzleFragment();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                 fragmentTransaction.add(R.id.fragment_container, frag);
                 fragmentTransaction.commit();
+
+            }
+        });
+        solve_puzzle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generate_puzzle.setBackgroundResource(R.color.blue);
+                solve_puzzle.setBackgroundResource(R.color.grey);
+
             }
         });
 
@@ -37,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void intilaize_views() {
         generate_puzzle = (Button) findViewById(R.id.btn_generatepuzzle);
+        solve_puzzle= (Button) findViewById(R.id.btn_solvefarm);
 
     }
 

@@ -129,7 +129,7 @@ public class PuzzleFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
+//to find number of neighbours with same colour
     public void getneighbour(ArrayList<RecyclerModel> newlist) {
 
         for (int i = 0; i < newlist.size(); i++) {
