@@ -1,6 +1,5 @@
-package com.sanu.duceretask;
+package com.sanu.duceretask.Fragments;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+
+import com.sanu.duceretask.Adapters.MyRecyclerViewAdapter;
+import com.sanu.duceretask.R;
+import com.sanu.duceretask.models.RecyclerModel;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +33,8 @@ public class PuzzleFragment extends Fragment {
     ArrayList<RecyclerModel> recyclerModel = new ArrayList<>();
     MyRecyclerViewAdapter adapter;
     ArrayList<Integer> sanu = new ArrayList<>();
+    int numberOfColumns = 5;
+    int totalgrids=numberOfColumns*numberOfColumns;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,8 +87,8 @@ public class PuzzleFragment extends Fragment {
         list.clear();
         sanu.clear();
 
-        for (int i = 0; i < 25; ) {
-            int rand = ((int) (Math.random() * 25)) + 1;
+        for (int i = 0; i < totalgrids; ) {
+            int rand = ((int) (Math.random() * totalgrids)) + 1;
             if (!list.contains(rand)) {
                 list.add(rand);
                 i++;
@@ -101,7 +108,7 @@ public class PuzzleFragment extends Fragment {
 
         // set up the RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.rvNumbers);
-        int numberOfColumns = 5;
+
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), numberOfColumns));
         adapter = new MyRecyclerViewAdapter(getActivity(), recyclerModel);
 
@@ -129,8 +136,8 @@ public class PuzzleFragment extends Fragment {
 
 
             int top = -1, bottom = -1, right = -1, left = -1, count = 0;
-            top = i - 5;
-            bottom = i + 5;
+            top = i - numberOfColumns;
+            bottom = i + numberOfColumns;
             left = i - 1;
             right = i + 1;
 
@@ -140,19 +147,19 @@ public class PuzzleFragment extends Fragment {
                 }
             }
 
-            if (bottom < 25) {
+            if (bottom < totalgrids) {
                 if (newlist.get(i).colourcount == newlist.get(bottom).colourcount) {
                     count++;
                 }
             }
 
-            if (i % 5 != 4 && right < 25 && i > -1) {
+            if (i % numberOfColumns != 4 && right < totalgrids && i > -1) {
                 if (newlist.get(i).colourcount == newlist.get(right).colourcount) {
                     count++;
                 }
             }
 
-            if (i % 5 != 0 && left < 25 && i > 0) {
+            if (i % numberOfColumns != 0 && left < totalgrids && i > 0) {
                 if (newlist.get(i).colourcount == newlist.get(left).colourcount) {
                     count++;
                 }

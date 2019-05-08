@@ -1,13 +1,15 @@
-package com.sanu.duceretask;
+package com.sanu.duceretask.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.sanu.duceretask.R;
+import com.sanu.duceretask.models.RecyclerModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    MyRecyclerViewAdapter(Context context, List<RecyclerModel> recyclerModels) {
+  public  MyRecyclerViewAdapter(Context context, List<RecyclerModel> recyclerModels) {
         this.mInflater = LayoutInflater.from(context);
         this.recyclerModels = recyclerModels;
 

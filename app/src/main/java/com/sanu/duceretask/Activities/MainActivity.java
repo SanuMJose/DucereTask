@@ -1,4 +1,4 @@
-package com.sanu.duceretask;
+package com.sanu.duceretask.Activities;
 
 
 import android.support.v4.app.FragmentManager;
@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.sanu.duceretask.Fragments.PuzzleFragment;
+import com.sanu.duceretask.R;
 
 public class MainActivity extends AppCompatActivity {
 

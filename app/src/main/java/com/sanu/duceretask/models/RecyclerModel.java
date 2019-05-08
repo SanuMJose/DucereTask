@@ -1,8 +1,8 @@
-package com.sanu.duceretask;
+package com.sanu.duceretask.models;
 
 public class RecyclerModel {
-    String number;
-    int count;
+  public  String number;
+  public  int count;
 
     public RecyclerModel(String number, int count, int colourcount) {
         this.number = number;
@@ -34,5 +34,5 @@ public class RecyclerModel {
         this.colourcount = colourcount;
     }
 
-    int colourcount;
+   public int colourcount;
 }
