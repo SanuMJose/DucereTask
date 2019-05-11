@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Fragments.PuzzleFragment">
+    android:layout_height="wrap_content"
+    tools:context=".Fragments.PuzzleFragment"
+    android:orientation="vertical">
+    <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvNumbers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <Button
+        android:background="@color/red"
+        android:textColor="@color/white"
+        android:id="@+id/solve_big_btn"
+        android:layout_margin="40dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Solve Big Farm"/>
 
 
-</FrameLayout>
+</LinearLayout>

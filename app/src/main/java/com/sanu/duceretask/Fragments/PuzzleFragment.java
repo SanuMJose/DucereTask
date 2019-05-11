@@ -9,15 +9,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 import com.sanu.duceretask.Adapters.MyRecyclerViewAdapter;
+import com.sanu.duceretask.Interfaces.ButtonInterface;
+import com.sanu.duceretask.Interfaces.Button_fragment_interface;
 import com.sanu.duceretask.R;
+import com.sanu.duceretask.models.Pair;
 import com.sanu.duceretask.models.RecyclerModel;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.Stack;
 
 
 /**
@@ -28,13 +37,32 @@ import java.util.List;
  * Use the {@link PuzzleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PuzzleFragment extends Fragment {
-    List<Integer> list = new ArrayList<Integer>();
+public class PuzzleFragment extends Fragment implements Button_fragment_interface, ButtonInterface {
+
+    ButtonInterface buttonInterface;
+    RecyclerView recyclerView;
+    int maxIndex = 0;
+    private static final int[][] directions_matric = new int[][]{
+            {0, 1},
+            {1, 0},
+            {0, -1},
+            {-1, 0}};
+    int[][] matrix;
+    List<Integer> randomList = new ArrayList<Integer>();
     ArrayList<RecyclerModel> recyclerModel = new ArrayList<>();
+    ArrayList<Integer> neigbourcellsList = new ArrayList<>();
     MyRecyclerViewAdapter adapter;
-    ArrayList<Integer> sanu = new ArrayList<>();
+    Button solve_farm_btn;
+
     int numberOfColumns = 5;
-    int totalgrids=numberOfColumns*numberOfColumns;
+    int totalgrids = numberOfColumns * numberOfColumns;
+
+    ArrayList<Integer> matrixzerothrow = new ArrayList<>();
+    ArrayList<Integer> matrixfirstrow = new ArrayList<>();
+    ArrayList<Integer> matrixsecondrow = new ArrayList<>();
+    ArrayList<Integer> matrixthirdrow = new ArrayList<>();
+    ArrayList<Integer> matrixfourthrow = new ArrayList<>();
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,37 +111,47 @@ public class PuzzleFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_puzzle, container, false);
+        solve_farm_btn = (Button) view.findViewById(R.id.solve_big_btn);
+        buttonInterface = (ButtonInterface) getActivity();
 
-        list.clear();
-        sanu.clear();
+        randomList.clear();
+
 
         for (int i = 0; i < totalgrids; ) {
             int rand = ((int) (Math.random() * totalgrids)) + 1;
-            if (!list.contains(rand)) {
-                list.add(rand);
+            if (!randomList.contains(rand)) {
+                randomList.add(rand);
                 i++;
             }
         }
 
 
-        Log.i("randomlist", "" + list);
-        String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"};
+        Log.i("randomlist", "" + randomList);
 
-        for (int i = 0; i < list.size(); i++) {
-            RecyclerModel newrecyclerModel = new RecyclerModel(data[i], 0, list.get(i) % 2);
+        for (int i = 0; i < randomList.size(); i++) {
+            RecyclerModel newrecyclerModel = new RecyclerModel("0", 0, randomList.get(i) % 2);
             recyclerModel.add(newrecyclerModel);
         }
 
         getneighbour(recyclerModel);
 
         // set up the RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.rvNumbers);
+        recyclerView = view.findViewById(R.id.rvNumbers);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), numberOfColumns));
         adapter = new MyRecyclerViewAdapter(getActivity(), recyclerModel);
 
         recyclerView.setAdapter(adapter);
-        ;
+
+        solve_farm_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                solve_farm_btn.setBackgroundResource(R.color.grey);
+                buttonInterface.button_colour();
+                colourbigfarm();
+
+            }
+        });
         return view;
     }
 
@@ -124,13 +162,27 @@ public class PuzzleFragment extends Fragment {
         }
     }
 
+    @Override
+    public void button_colour_fragment() {
+        solve_farm_btn.setBackgroundResource(R.color.grey);
+    }
+
+    @Override
+    public void button_colour() {
+
+    }
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-//to find number of neighbours with same colour
+
+    /*  Method  to find number of neighbours with same colour*/
+
+
     public void getneighbour(ArrayList<RecyclerModel> newlist) {
+
 
         for (int i = 0; i < newlist.size(); i++) {
 
@@ -140,35 +192,152 @@ public class PuzzleFragment extends Fragment {
             bottom = i + numberOfColumns;
             left = i - 1;
             right = i + 1;
+            if (newlist.get(i).colourcount == 0) {
 
-            if (top > -1) {
-                if (newlist.get(i).colourcount == newlist.get(top).colourcount) {
-                    count++;
+                if (top > -1) {
+                    if (newlist.get(i).colourcount == newlist.get(top).colourcount) {
+                        count++;
+                    }
                 }
-            }
 
-            if (bottom < totalgrids) {
-                if (newlist.get(i).colourcount == newlist.get(bottom).colourcount) {
-                    count++;
+                if (bottom < totalgrids) {
+                    if (newlist.get(i).colourcount == newlist.get(bottom).colourcount) {
+                        count++;
+                    }
                 }
-            }
 
-            if (i % numberOfColumns != 4 && right < totalgrids && i > -1) {
-                if (newlist.get(i).colourcount == newlist.get(right).colourcount) {
-                    count++;
+                if (i % numberOfColumns != 4 && right < totalgrids && i > -1) {
+                    if (newlist.get(i).colourcount == newlist.get(right).colourcount) {
+                        count++;
+                    }
                 }
-            }
 
-            if (i % numberOfColumns != 0 && left < totalgrids && i > 0) {
-                if (newlist.get(i).colourcount == newlist.get(left).colourcount) {
-                    count++;
+                if (i % numberOfColumns != 0 && left < totalgrids && i > 0) {
+                    if (newlist.get(i).colourcount == newlist.get(left).colourcount) {
+                        count++;
+                    }
                 }
-            }
 
-            newlist.get(i).setCount(count);
+                newlist.get(i).setCount(count);
+            }
         }
 
+        neigbourcellsList.clear();
+        for (int i = 0; i < newlist.size(); i++) {
+            neigbourcellsList.add(newlist.get(i).count);
+
+        }
+
+
+        for (Integer number : neigbourcellsList) {
+
+            int newnumber = number;
+
+
+            if ((newnumber > neigbourcellsList.get(maxIndex))) {
+
+
+                maxIndex = neigbourcellsList.indexOf(newnumber);
+
+
+            }
+
+
+        }
+    }
+
+    public void colourbigfarm() {
+
+        create_matrix();
+        matrix = new int[][]{
+                convertIntegers(matrixzerothrow),
+                convertIntegers(matrixfirstrow),
+                convertIntegers(matrixsecondrow),
+                convertIntegers(matrixthirdrow),
+                convertIntegers(matrixfourthrow)};
+
+
+        Stack<Pair> stack = new Stack<>();
+        Set<Pair> visited = new HashSet<>();
+
+
+        int xcordinate = maxIndex / numberOfColumns;
+        int ycordinate = maxIndex % numberOfColumns;
+
+
+        Pair start = new Pair(xcordinate, ycordinate);
+        stack.add(start);
+
+        while (!stack.isEmpty()) {
+            Pair pair = stack.pop();
+            if (matrix[pair.row][pair.col] == 4) {
+                continue;
+            }
+            for (int i = 0; i < directions_matric.length; i++) {
+                int x = pair.row + directions_matric[i][0];
+                int y = pair.col + directions_matric[i][1];
+                if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length || matrix[x][y] != 0 || visited.contains(new Pair(x, y))) {
+                    continue;
+                }
+                stack.add(new Pair(x, y));
+            }
+            visited.add(pair);
+
+
+            matrix[pair.row][pair.col] = 4;
+        }
+
+        resetadaapter(matrix);
+
+    }
+    /*reseting adapter to change green*/
+
+    public void resetadaapter(final int[][] matrix) {
+        recyclerModel.clear();
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+
+                RecyclerModel newrecyclerModel = new RecyclerModel("0", 0, matrix[i][j]);
+                recyclerModel.add(newrecyclerModel);
+
+            }
+
+            adapter.notifyDataSetChanged();
+        }
     }
 
 
+    /*  creating single row for matrix*/
+
+    public void create_matrix() {
+        matrixzerothrow.clear();
+        matrixfirstrow.clear();
+        matrixsecondrow.clear();
+        matrixthirdrow.clear();
+        matrixfourthrow.clear();
+        for (int i = 0; i < recyclerModel.size(); i++) {
+            if (i < numberOfColumns) {
+                matrixzerothrow.add(recyclerModel.get(i).getColourcount());
+            } else if (i > 4 && i < numberOfColumns*2) {
+                matrixfirstrow.add(recyclerModel.get(i).getColourcount());
+            } else if (i > 9 && i < numberOfColumns*3) {
+                matrixsecondrow.add(recyclerModel.get(i).getColourcount());
+            } else if (14 > 4 && i < numberOfColumns*4) {
+                matrixthirdrow.add(recyclerModel.get(i).getColourcount());
+            } else if (i > 19 && i < numberOfColumns*numberOfColumns) {
+                matrixfourthrow.add(recyclerModel.get(i).getColourcount());
+            }
+        }
+    }
+
+
+    /*arraylist to array*/
+
+    public static int[] convertIntegers(List<Integer> integers) {
+        int[] ret = new int[integers.size()];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = integers.get(i).intValue();
+        }
+        return ret;
+    }
 }

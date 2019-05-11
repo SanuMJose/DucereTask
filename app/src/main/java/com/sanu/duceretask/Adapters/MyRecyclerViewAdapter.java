@@ -46,10 +46,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         int count =recyclerModels.get(position).getColourcount() ;
         if (count == 1) {
             holder.myTextView.setBackgroundResource(R.color.blue);
-        } else {
+        } else if(count == 0){
             holder.myTextView.setBackgroundResource(R.color.brown);
+        } else if(count==4){
+            holder.myTextView.setBackgroundResource(R.color.green);
         }
+/*
         holder.myTextView.setText(" no: of neigbr "+recyclerModels.get(position).getCount());
+*/
     }
 
     // total number of cells

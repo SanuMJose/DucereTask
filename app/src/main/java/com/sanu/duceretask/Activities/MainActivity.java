@@ -6,15 +6,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.sanu.duceretask.Fragments.PuzzleFragment;
+import com.sanu.duceretask.Interfaces.ButtonInterface;
+import com.sanu.duceretask.Interfaces.Button_fragment_interface;
 import com.sanu.duceretask.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ButtonInterface,Button_fragment_interface{
 
-    Button generate_puzzle,solve_puzzle;
+Button_fragment_interface button_fragment_interface;
+    Button generate_puzzle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 generate_puzzle.setBackgroundResource(R.color.grey);
-                solve_puzzle.setBackgroundResource(R.color.red);
+                button_fragment_interface.button_colour_fragment();
 
                 PuzzleFragment frag = new PuzzleFragment();
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -36,22 +40,25 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        solve_puzzle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                generate_puzzle.setBackgroundResource(R.color.blue);
-                solve_puzzle.setBackgroundResource(R.color.grey);
-
-            }
-        });
 
     }
 
     public void intilaize_views() {
         generate_puzzle = (Button) findViewById(R.id.btn_generatepuzzle);
-        solve_puzzle= (Button) findViewById(R.id.btn_solvefarm);
+        button_fragment_interface=(Button_fragment_interface)this;
+
 
     }
 
 
+    @Override
+    public void button_colour() {
+        generate_puzzle.setBackgroundResource(R.color.blue);
+
+    }
+
+    @Override
+    public void button_colour_fragment() {
+
+    }
 }
